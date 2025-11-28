@@ -13,3 +13,6 @@ __pycache__/
 # Coverage
 .coverage
 htmlcov/
+
+# Session logs
+sessions.log
