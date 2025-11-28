@@ -559,3 +559,291 @@ body {
     transform: rotate(360deg);
   }
 }
+
+/* Theme Settings */
+.theme-settings,
+.sound-settings {
+  border-top: 1px solid #ecf0f1;
+  padding-top: 20px;
+  margin-top: 10px;
+}
+
+.sound-settings {
+  gap: 30px;
+}
+
+.sound-settings .setting-item label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #2c3e50;
+}
+
+.sound-settings input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Light Theme (Default) */
+.theme-light {
+  /* Default styles already applied */
+}
+
+/* Dark Theme */
+.theme-dark {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.theme-dark .container {
+  background: rgba(30, 30, 50, 0.95);
+  color: #e0e0e0;
+}
+
+.theme-dark .header {
+  background: linear-gradient(135deg, #0f3460 0%, #1a1a40 100%);
+}
+
+.theme-dark .session-info h2 {
+  color: #e0e0e0;
+}
+
+.theme-dark .cycle-info {
+  color: #a0a0a0;
+}
+
+.theme-dark .timer-track {
+  stroke: #2d2d4a;
+}
+
+.theme-dark .time {
+  color: #e0e0e0;
+}
+
+.theme-dark .time-label {
+  color: #a0a0a0;
+}
+
+.theme-dark .btn-secondary {
+  background: #4a4a6a;
+}
+
+.theme-dark .btn-secondary:hover:not(:disabled) {
+  background: #5a5a7a;
+}
+
+.theme-dark .btn-tertiary {
+  color: #a0a0a0;
+  border-color: #4a4a6a;
+}
+
+.theme-dark .btn-tertiary:hover:not(:disabled) {
+  background: #2d2d4a;
+  border-color: #5a5a7a;
+}
+
+.theme-dark .setting-item label {
+  color: #a0a0a0;
+}
+
+.theme-dark .setting-item select {
+  background: #2d2d4a;
+  color: #e0e0e0;
+  border-color: #4a4a6a;
+}
+
+.theme-dark .status-display {
+  background: #2d2d4a;
+}
+
+.theme-dark .status-label {
+  color: #a0a0a0;
+}
+
+.theme-dark .status-value {
+  color: #e0e0e0;
+}
+
+.theme-dark .history-section {
+  background: #1e1e3a;
+  border-top-color: #2d2d4a;
+}
+
+.theme-dark .history-section h3 {
+  color: #e0e0e0;
+}
+
+.theme-dark .btn-link {
+  color: #6e8efb;
+}
+
+.theme-dark .stat {
+  background: #2d2d4a;
+}
+
+.theme-dark .stat-number {
+  color: #6e8efb;
+}
+
+.theme-dark .stat-label {
+  color: #a0a0a0;
+}
+
+.theme-dark .history-item {
+  background: #2d2d4a;
+}
+
+.theme-dark .history-session-type {
+  color: #e0e0e0;
+}
+
+.theme-dark .history-timestamp {
+  color: #a0a0a0;
+}
+
+.theme-dark .history-duration {
+  color: #6e8efb;
+}
+
+.theme-dark .footer {
+  background: #0f0f1f;
+  color: #a0a0a0;
+}
+
+.theme-dark .sound-settings .setting-item label {
+  color: #e0e0e0;
+}
+
+.theme-dark .theme-settings,
+.theme-dark .sound-settings {
+  border-top-color: #4a4a6a;
+}
+
+/* Focus Theme (Minimal) */
+.theme-focus {
+  background: #f5f5f5;
+}
+
+.theme-focus .container {
+  background: #ffffff;
+  box-shadow: none;
+  border: 1px solid #e0e0e0;
+}
+
+.theme-focus .header {
+  background: #333333;
+  padding: 20px;
+}
+
+.theme-focus .header h1 {
+  font-size: 1.5rem;
+}
+
+.theme-focus .subtitle {
+  display: none;
+}
+
+.theme-focus .session-info h2 {
+  font-size: 1.2rem;
+  color: #333333;
+}
+
+.theme-focus .cycle-info {
+  font-size: 0.8rem;
+}
+
+.theme-focus .timer-section {
+  padding: 20px;
+}
+
+.theme-focus .timer-display {
+  margin: 20px 0;
+}
+
+.theme-focus .timer-svg {
+  width: 200px;
+  height: 200px;
+}
+
+.theme-focus .timer-svg .timer-track,
+.theme-focus .timer-svg .timer-progress {
+  stroke-width: 4;
+}
+
+.theme-focus .timer-track {
+  stroke: #e0e0e0;
+}
+
+.theme-focus .timer-progress {
+  stroke: #333333;
+}
+
+.theme-focus .timer-progress.work {
+  stroke: #c0392b;
+}
+
+.theme-focus .timer-progress.short-break {
+  stroke: #d35400;
+}
+
+.theme-focus .timer-progress.long-break {
+  stroke: #27ae60;
+}
+
+.theme-focus .time {
+  font-size: 2rem;
+  color: #333333;
+}
+
+.theme-focus .time-label {
+  display: none;
+}
+
+.theme-focus .controls {
+  margin: 20px 0;
+  gap: 10px;
+}
+
+.theme-focus .btn {
+  padding: 10px 20px;
+  min-width: 80px;
+  font-size: 0.9rem;
+  border-radius: 4px;
+}
+
+.theme-focus .btn-primary {
+  background: #333333;
+}
+
+.theme-focus .btn-primary:hover:not(:disabled) {
+  background: #444444;
+}
+
+.theme-focus .settings {
+  display: none;
+}
+
+.theme-focus .theme-settings {
+  display: flex;
+  border-top: none;
+  padding-top: 0;
+}
+
+.theme-focus .sound-settings {
+  display: none;
+}
+
+.theme-focus .status-display {
+  display: none;
+}
+
+.theme-focus .history-section {
+  display: none;
+}
+
+.theme-focus .footer {
+  padding: 10px;
+  font-size: 0.75rem;
+}
