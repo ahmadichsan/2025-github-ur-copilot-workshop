@@ -28,6 +28,9 @@ class PomodoroTimer {
             interval: null
         };
 
+        // Audio context for sound generation (created lazily on first user interaction)
+        this.audioContext = null;
+
         // DOM elements
         this.elements = {
             timerDisplay: document.getElementById('timer-display'),
@@ -477,10 +480,31 @@ class PomodoroTimer {
         document.body.classList.add(`theme-${this.settings.theme}`);
     }
 
+    getAudioContext() {
+        // Lazily create and reuse a single AudioContext instance
+        if (!this.audioContext) {
+            try {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            } catch (error) {
+                console.log('Failed to create AudioContext:', error.message);
+                return null;
+            }
+        }
+        // Resume context if it was suspended (browsers require user interaction)
+        if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+        return this.audioContext;
+    }
+
     playSound(type) {
-        // Create audio context for generating sounds
+        // Reuse single AudioContext instance for generating sounds
+        const audioContext = this.getAudioContext();
+        if (!audioContext) {
+            return; // Audio not available
+        }
+
         try {
-            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
 
@@ -517,7 +541,7 @@ class PomodoroTimer {
                     break;
             }
         } catch (error) {
-            console.log('Audio playback not supported:', error);
+            console.log('Failed to play sound:', error.message);
         }
     }
 
