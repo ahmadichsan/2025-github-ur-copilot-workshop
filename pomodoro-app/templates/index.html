@@ -63,15 +63,16 @@
           <div class="setting-item">
             <label for="work-duration">Work Duration:</label>
             <select id="work-duration">
-              <option value="1500">25 min</option>
-              <option value="3000">50 min</option>
-              <option value="1800">30 min</option>
+              <option value="900">15 min</option>
+              <option value="1500" selected>25 min</option>
+              <option value="2100">35 min</option>
+              <option value="2700">45 min</option>
             </select>
           </div>
           <div class="setting-item">
             <label for="break-duration">Short Break:</label>
             <select id="break-duration">
-              <option value="300">5 min</option>
+              <option value="300" selected>5 min</option>
               <option value="600">10 min</option>
               <option value="900">15 min</option>
             </select>
@@ -80,9 +81,43 @@
             <label for="long-break-duration">Long Break:</label>
             <select id="long-break-duration">
               <option value="900">15 min</option>
-              <option value="1200">20 min</option>
+              <option value="1200" selected>20 min</option>
               <option value="1800">30 min</option>
             </select>
+          </div>
+        </div>
+
+        <!-- Theme Settings -->
+        <div class="settings theme-settings">
+          <div class="setting-item">
+            <label for="theme-selector">Theme:</label>
+            <select id="theme-selector">
+              <option value="light" selected>Light Mode</option>
+              <option value="dark">Dark Mode</option>
+              <option value="focus">Focus Mode</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Sound Settings -->
+        <div class="settings sound-settings">
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="sound-start" checked />
+              Start Sound
+            </label>
+          </div>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="sound-end" checked />
+              End Sound
+            </label>
+          </div>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="sound-tick" />
+              Tick Sound
+            </label>
           </div>
         </div>
 

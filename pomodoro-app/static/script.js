@@ -6,8 +6,12 @@ class PomodoroTimer {
         this.settings = {
             workDuration: 1500,     // 25 minutes
             shortBreak: 300,        // 5 minutes
-            longBreak: 900,         // 15 minutes
-            sessionsUntilLongBreak: 4
+            longBreak: 1200,        // 20 minutes
+            sessionsUntilLongBreak: 4,
+            theme: 'light',         // 'light', 'dark', 'focus'
+            soundStart: true,       // Play sound on session start
+            soundEnd: true,         // Play sound on session end
+            soundTick: false        // Play tick sound
         };
 
         // Timer state
@@ -40,6 +44,10 @@ class PomodoroTimer {
             workDuration: document.getElementById('work-duration'),
             breakDuration: document.getElementById('break-duration'),
             longBreakDuration: document.getElementById('long-break-duration'),
+            themeSelector: document.getElementById('theme-selector'),
+            soundStart: document.getElementById('sound-start'),
+            soundEnd: document.getElementById('sound-end'),
+            soundTick: document.getElementById('sound-tick'),
             historyToggleBtn: document.getElementById('history-toggle-btn'),
             sessionHistory: document.getElementById('session-history'),
             totalSessionsEl: document.getElementById('total-sessions'),
@@ -57,6 +65,7 @@ class PomodoroTimer {
         this.loadSettings();
         this.loadSessionHistory();
         this.updateBodyClass();
+        this.applyTheme();
     }
 
     bindEvents() {
@@ -73,6 +82,7 @@ class PomodoroTimer {
                 this.state.timeRemaining = this.settings.workDuration;
                 this.updateDisplay();
             }
+            this.saveSettings();
         });
 
         this.elements.breakDuration.addEventListener('change', (e) => {
@@ -81,6 +91,7 @@ class PomodoroTimer {
                 this.state.timeRemaining = this.settings.shortBreak;
                 this.updateDisplay();
             }
+            this.saveSettings();
         });
 
         this.elements.longBreakDuration.addEventListener('change', (e) => {
@@ -89,6 +100,30 @@ class PomodoroTimer {
                 this.state.timeRemaining = this.settings.longBreak;
                 this.updateDisplay();
             }
+            this.saveSettings();
+        });
+
+        // Theme selector
+        this.elements.themeSelector.addEventListener('change', (e) => {
+            this.settings.theme = e.target.value;
+            this.applyTheme();
+            this.saveSettings();
+        });
+
+        // Sound settings
+        this.elements.soundStart.addEventListener('change', (e) => {
+            this.settings.soundStart = e.target.checked;
+            this.saveSettings();
+        });
+
+        this.elements.soundEnd.addEventListener('change', (e) => {
+            this.settings.soundEnd = e.target.checked;
+            this.saveSettings();
+        });
+
+        this.elements.soundTick.addEventListener('change', (e) => {
+            this.settings.soundTick = e.target.checked;
+            this.saveSettings();
         });
 
         // History toggle
@@ -117,6 +152,11 @@ class PomodoroTimer {
         this.state.isRunning = true;
         this.state.isPaused = false;
         this.state.startTime = Date.now();
+
+        // Play start sound if enabled
+        if (this.settings.soundStart) {
+            this.playSound('start');
+        }
 
         // Log session start
         this.logSessionEvent('start');
@@ -194,6 +234,11 @@ class PomodoroTimer {
         if (this.state.timeRemaining > 0) {
             this.state.timeRemaining--;
             this.updateDisplay();
+            
+            // Play tick sound if enabled
+            if (this.settings.soundTick) {
+                this.playSound('tick');
+            }
         } else {
             // Session completed
             this.sessionComplete();
@@ -203,6 +248,11 @@ class PomodoroTimer {
     sessionComplete() {
         clearInterval(this.interval);
         this.state.isRunning = false;
+
+        // Play end sound if enabled
+        if (this.settings.soundEnd) {
+            this.playSound('end');
+        }
 
         // Log session completion
         this.logSessionEvent('complete');
@@ -285,8 +335,8 @@ class PomodoroTimer {
 
         this.elements.progressCircle.style.strokeDashoffset = offset;
 
-        // Update circle color based on session type
-        this.elements.progressCircle.className = `timer-progress ${this.state.currentSession}`;
+        // Update circle color based on session type using setAttribute for SVG
+        this.elements.progressCircle.setAttribute('class', `timer-progress ${this.state.currentSession}`);
     }
 
     getSessionDuration() {
@@ -406,11 +456,69 @@ class PomodoroTimer {
             this.elements.workDuration.value = this.settings.workDuration;
             this.elements.breakDuration.value = this.settings.shortBreak;
             this.elements.longBreakDuration.value = this.settings.longBreak;
+            this.elements.themeSelector.value = this.settings.theme;
+            this.elements.soundStart.checked = this.settings.soundStart;
+            this.elements.soundEnd.checked = this.settings.soundEnd;
+            this.elements.soundTick.checked = this.settings.soundTick;
+            
+            // Apply theme from saved settings
+            this.applyTheme();
         }
     }
 
     saveSettings() {
         localStorage.setItem('pomodoroSettings', JSON.stringify(this.settings));
+    }
+
+    applyTheme() {
+        // Remove existing theme classes
+        document.body.classList.remove('theme-light', 'theme-dark', 'theme-focus');
+        // Add current theme class
+        document.body.classList.add(`theme-${this.settings.theme}`);
+    }
+
+    playSound(type) {
+        // Create audio context for generating sounds
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            switch (type) {
+                case 'start':
+                    // Rising tone for start
+                    oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+                    oscillator.frequency.linearRampToValueAtTime(880, audioContext.currentTime + 0.1);
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.2);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.2);
+                    break;
+                case 'end':
+                    // Two-tone chime for end
+                    oscillator.frequency.setValueAtTime(660, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.15);
+                    gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.2);
+                    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.4);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.4);
+                    break;
+                case 'tick':
+                    // Soft click for tick
+                    oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+                    gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 0.05);
+                    oscillator.start(audioContext.currentTime);
+                    oscillator.stop(audioContext.currentTime + 0.05);
+                    break;
+            }
+        } catch (error) {
+            console.log('Audio playback not supported:', error);
+        }
     }
 
     toggleHistory() {
