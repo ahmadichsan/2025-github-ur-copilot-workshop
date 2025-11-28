@@ -57,6 +57,36 @@ class PomodoroTimer {
         this.loadSettings();
         this.loadSessionHistory();
         this.updateBodyClass();
+        this.createParticlesContainer();
+    }
+
+    createParticlesContainer() {
+        // Create particles container for focus mode visual effects
+        this.particlesContainer = document.createElement('div');
+        this.particlesContainer.className = 'particles-container';
+        this.particlesContainer.style.display = 'none';
+        document.body.appendChild(this.particlesContainer);
+        
+        // Create particles
+        for (let i = 0; i < 15; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            this.particlesContainer.appendChild(particle);
+        }
+    }
+
+    enableFocusMode() {
+        document.body.classList.add('focus-mode');
+        document.querySelector('.timer-circle').classList.add('focus-active');
+        this.particlesContainer.style.display = 'block';
+    }
+
+    disableFocusMode() {
+        document.body.classList.remove('focus-mode');
+        document.querySelector('.timer-circle').classList.remove('focus-active');
+        this.particlesContainer.style.display = 'none';
     }
 
     bindEvents() {
@@ -121,6 +151,11 @@ class PomodoroTimer {
         // Log session start
         this.logSessionEvent('start');
 
+        // Enable focus mode visual effects for work sessions
+        if (this.state.currentSession === 'work') {
+            this.enableFocusMode();
+        }
+
         // Start countdown
         this.interval = setInterval(() => {
             this.tick();
@@ -133,6 +168,11 @@ class PomodoroTimer {
     resume() {
         this.state.isRunning = true;
         this.state.isPaused = false;
+
+        // Re-enable focus mode visual effects for work sessions
+        if (this.state.currentSession === 'work') {
+            this.enableFocusMode();
+        }
 
         this.interval = setInterval(() => {
             this.tick();
@@ -150,6 +190,10 @@ class PomodoroTimer {
         this.state.isPaused = true;
 
         clearInterval(this.interval);
+
+        // Temporarily disable focus mode visual effects
+        this.disableFocusMode();
+
         this.updateButtonStates();
         this.updateStatus('Paused');
 
@@ -162,6 +206,9 @@ class PomodoroTimer {
         this.state.isPaused = false;
 
         clearInterval(this.interval);
+
+        // Disable focus mode visual effects
+        this.disableFocusMode();
 
         // Reset timer to current session duration
         this.resetCurrentSession();
@@ -177,6 +224,9 @@ class PomodoroTimer {
     skip() {
         // Log skip event before changing session
         this.logSessionEvent('skip');
+
+        // Disable focus mode before switching sessions
+        this.disableFocusMode();
 
         // Move to next session
         this.nextSession();
@@ -203,6 +253,9 @@ class PomodoroTimer {
     sessionComplete() {
         clearInterval(this.interval);
         this.state.isRunning = false;
+
+        // Disable focus mode visual effects
+        this.disableFocusMode();
 
         // Log session completion
         this.logSessionEvent('complete');
@@ -285,8 +338,34 @@ class PomodoroTimer {
 
         this.elements.progressCircle.style.strokeDashoffset = offset;
 
-        // Update circle color based on session type
-        this.elements.progressCircle.className = `timer-progress ${this.state.currentSession}`;
+        // Update circle color based on time progress (only when running)
+        this.updateTimeBasedColor(progress);
+    }
+
+    updateTimeBasedColor(progress) {
+        // Remove previous time-based classes
+        this.elements.progressCircle.classList.remove('time-fresh', 'time-midway', 'time-ending');
+        this.elements.timerDisplay.classList.remove('time-fresh', 'time-midway', 'time-ending');
+        
+        // Also remove session-type classes when showing time-based colors
+        this.elements.progressCircle.classList.remove('work', 'short-break', 'long-break');
+
+        if (this.state.isRunning) {
+            // Time-based color: blue (fresh) → yellow (midway) → red (ending)
+            let colorClass;
+            if (progress < 0.5) {
+                colorClass = 'time-fresh';      // 0-50%: Blue
+            } else if (progress < 0.8) {
+                colorClass = 'time-midway';     // 50-80%: Yellow
+            } else {
+                colorClass = 'time-ending';     // 80-100%: Red
+            }
+            this.elements.progressCircle.classList.add(colorClass);
+            this.elements.timerDisplay.classList.add(colorClass);
+        } else {
+            // When not running, use session type color
+            this.elements.progressCircle.classList.add(this.state.currentSession);
+        }
     }
 
     getSessionDuration() {

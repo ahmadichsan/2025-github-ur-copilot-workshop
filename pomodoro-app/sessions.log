@@ -4,5 +4,13 @@
     "action": "start",
     "timestamp": "2025-11-28T10:00:00",
     "duration": 1500
+  },
+  {
+    "session_type": "work",
+    "action": "start",
+    "timestamp": "2025-11-28T09:02:24.718Z",
+    "duration": 0,
+    "cycle_count": 1,
+    "session_count": 1
   }
 ]
