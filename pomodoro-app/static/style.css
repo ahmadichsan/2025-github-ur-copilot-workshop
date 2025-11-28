@@ -103,14 +103,17 @@ body {
 /* Dynamic color states based on time progress */
 .timer-progress.time-fresh {
   stroke: #3498db; /* Blue - fresh start */
+  filter: drop-shadow(0 0 8px rgba(52, 152, 219, 0.5));
 }
 
 .timer-progress.time-midway {
   stroke: #f1c40f; /* Yellow - midway */
+  filter: drop-shadow(0 0 8px rgba(241, 196, 15, 0.5));
 }
 
 .timer-progress.time-ending {
   stroke: #e74c3c; /* Red - ending */
+  filter: drop-shadow(0 0 12px rgba(231, 76, 60, 0.6));
 }
 
 /* Fallback session-based colors when not running */
@@ -697,17 +700,4 @@ body {
   50% {
     transform: scale(1.05);
   }
-}
-
-/* Smooth glow effect on progress circle */
-.timer-progress.time-fresh {
-  filter: drop-shadow(0 0 8px rgba(52, 152, 219, 0.5));
-}
-
-.timer-progress.time-midway {
-  filter: drop-shadow(0 0 8px rgba(241, 196, 15, 0.5));
-}
-
-.timer-progress.time-ending {
-  filter: drop-shadow(0 0 12px rgba(231, 76, 60, 0.6));
 }

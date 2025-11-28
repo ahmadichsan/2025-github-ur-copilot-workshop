@@ -33,6 +33,7 @@ class PomodoroTimer {
             timerStatus: document.getElementById('timer-status'),
             nextSession: document.getElementById('next-session'),
             progressCircle: document.getElementById('progress-circle'),
+            timerCircle: document.querySelector('.timer-circle'),
             startBtn: document.getElementById('start-btn'),
             pauseBtn: document.getElementById('pause-btn'),
             stopBtn: document.getElementById('stop-btn'),
@@ -79,13 +80,17 @@ class PomodoroTimer {
 
     enableFocusMode() {
         document.body.classList.add('focus-mode');
-        document.querySelector('.timer-circle').classList.add('focus-active');
+        if (this.elements.timerCircle) {
+            this.elements.timerCircle.classList.add('focus-active');
+        }
         this.particlesContainer.style.display = 'block';
     }
 
     disableFocusMode() {
         document.body.classList.remove('focus-mode');
-        document.querySelector('.timer-circle').classList.remove('focus-active');
+        if (this.elements.timerCircle) {
+            this.elements.timerCircle.classList.remove('focus-active');
+        }
         this.particlesContainer.style.display = 'none';
     }
 
